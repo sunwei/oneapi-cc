@@ -3,6 +3,7 @@
 """The app module, containing the app factory function."""
 from flask import Flask
 from oneapi import user
+from oneapi import nginx
 
 
 def create_app(config=None):
@@ -15,4 +16,5 @@ def create_app(config=None):
 
 def register_blueprints(app):
     app.register_blueprint(user.views.blueprint)
+    app.register_blueprint(nginx.views.blueprint)
 

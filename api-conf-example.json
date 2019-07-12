@@ -1,0 +1,31 @@
+{
+  "oneapi": "1.0.0",
+  "namespace": "default",
+  "metadata": {
+    "author": "wayde.sun@gmail.com",
+    "github": "https://github.com/sunwei/flask-saml2-okta",
+    "name": "Simple API overview",
+    "description": "used for what...",
+    "annotations": "descriptions and tags"
+  },
+  "apis": [
+    {
+      "/warehouse/inventory": {
+        "endpoints": [
+          "api1.com",
+          "api2.com",
+          "api3.com"
+        ]
+      }
+    },
+    {
+      "/warehouse/pricing": {
+        "endpoints": [
+          "api4.com",
+          "api5.com",
+          "api6.com"
+        ]
+      }
+    }
+  ]
+}
