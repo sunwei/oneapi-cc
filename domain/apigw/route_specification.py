@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 """Domain Driven Design framework."""
-from ..ddd import Aggregate
+from ..ddd import ValueObject
 
 
-class ApiGW(Aggregate):
+class RouteSpecification(ValueObject):
 
     def check_mailbox(self):
         pass
