@@ -25,6 +25,7 @@ class ApiGWBuilder(object):
 
 
 class ApiGWJsonBuilder(ApiGWBuilder):
+    """Builder"""
     def __init__(self, data):
         self.yaml_source = data
         self.version = None
