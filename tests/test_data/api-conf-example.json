@@ -1,12 +1,13 @@
 {
-  "oneapi": "1.0.0",
+  "version": "v1",
   "namespace": "default",
   "metadata": {
-    "author": "wayde.sun@gmail.com",
-    "github": "https://github.com/sunwei/flask-saml2-okta",
     "name": "Simple API overview",
+    "author": "Sun Wei",
+    "email": "wayde.sun@gmail.com",
+    "repo": "https://github.com/sunwei/flask-saml2-okta",
     "description": "used for what...",
-    "annotations": "descriptions and tags"
+    "annotations": "labels or tags..."
   },
   "apis": [
     {
