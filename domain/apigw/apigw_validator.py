@@ -10,6 +10,9 @@ class ApiGWValidator(object):
     def check_route_specification(self, route_specification):
         raise NotImplementedError
 
+    def check_proxy(self, proxy):
+        raise NotImplementedError
+
 
 class ApiGWValidatorV1(ApiGWValidator):
     def check_metadata(self, metadata):
@@ -22,8 +25,21 @@ class ApiGWValidatorV1(ApiGWValidator):
                 check_result = True
         return check_result
 
+    def check_proxy(self, proxy):
+        check_result = False
+        if 'path' in proxy and 'endpoints' in proxy:
+            if proxy['endpoints']:
+                check_result = True
+        return check_result
+
     def check_route_specification(self, route_specification):
-        raise NotImplementedError
+        check_result = False
+        if route_specification is not None and route_specification:
+            for proxy in route_specification:
+                check_result = self.check_proxy(proxy)
+                if check_result is False:
+                    break
+        return check_result
 
 
 def create_api_gw_validator(version="v1"):

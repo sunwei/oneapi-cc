@@ -9,24 +9,21 @@
     "description": "used for what...",
     "annotations": "labels or tags..."
   },
-  "apis": [
+  "routeSpecification": [
     {
-      "/warehouse/inventory": {
-        "endpoints": [
-          "api1.com",
-          "api2.com",
-          "api3.com"
-        ]
-      }
-    },
-    {
-      "/warehouse/pricing": {
-        "endpoints": [
-          "api4.com",
-          "api5.com",
-          "api6.com"
-        ]
-      }
+      "path": "/warehouse/inventory",
+      "endpoints": [
+        "api1.com",
+        "api2.com",
+        "api3.com"
+      ]
+    }, {
+      "path": "/warehouse/pricing",
+      "endpoints": [
+        "api4.com",
+        "api5.com",
+        "api6.com"
+      ]
     }
   ]
 }
