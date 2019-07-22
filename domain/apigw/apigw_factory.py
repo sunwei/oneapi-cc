@@ -4,6 +4,7 @@ import yaml
 from .apigw import ApiGW
 from .metadata import Metadata
 from .apigw_validator import create_api_gw_validator
+from ..exception.ApiGWMetadataError import ApiGWMetadataError
 
 
 class ApiGWBuilder(object):
@@ -46,7 +47,8 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         if self.validator.check_metadata(self.json_source["metadata"]) is True:
             self.metadata = self.json_source["metadata"]
         else:
-            raise NotImplementedError
+            raise ApiGWMetadataError()
+
         return self
 
     def with_route_specification(self):

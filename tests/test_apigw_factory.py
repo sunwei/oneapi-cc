@@ -4,6 +4,7 @@ import pytest
 from domain.apigw.apigw import ApiGW
 from domain.apigw.metadata import Metadata
 from domain.apigw.apigw_factory import create_api_gw
+from domain.exception.ApiGWMetadataError import ApiGWMetadataError
 
 
 @pytest.mark.usefixtures("api_gw_json_data")
@@ -32,4 +33,10 @@ def test_api_gw_with_metadata(api_gw_json_data):
     api_gw_instance = create_api_gw("json", data=api_gw_json_data)
 
     assert type(api_gw_instance.metadata) is Metadata
+
+
+@pytest.mark.usefixtures("api_gw_wrong_json_data")
+def test_api_gw_with_metadata(api_gw_wrong_json_data):
+    with pytest.raises(ApiGWMetadataError):
+        assert create_api_gw("json", data=api_gw_wrong_json_data)
 
