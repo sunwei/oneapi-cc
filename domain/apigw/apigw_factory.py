@@ -2,6 +2,8 @@
 """Domain Driven Design framework."""
 import yaml
 from .apigw import ApiGW
+from .metadata import Metadata
+from .apigw_validator import create_api_gw_validator
 
 
 class ApiGWBuilder(object):
@@ -28,11 +30,23 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         self.route_specification = None
         self.validator = None
 
+    def _build_validator(self):
+        self.validator = create_api_gw_validator(self.version)
+
     def with_version(self):
         self.version = self.json_source["version"]
+        self._build_validator()
+        return self
+
+    def with_namespace(self):
+        self.namespace = self.json_source["namespace"] or "default"
         return self
 
     def with_metadata(self):
+        if self.validator.check_metadata(self.json_source["metadata"]) is True:
+            self.metadata = self.json_source["metadata"]
+        else:
+            raise NotImplementedError
         return self
 
     def with_route_specification(self):
@@ -41,6 +55,8 @@ class ApiGWJsonBuilder(ApiGWBuilder):
     def build(self):
         api_gw = ApiGW()
         api_gw.version = self.version
+        api_gw.namespace = self.namespace
+        api_gw.metadata = Metadata(self.metadata)
         return api_gw
 
 
@@ -52,6 +68,10 @@ def create_api_gw(formatter="yaml", data=None):
     }
 
     builder = api_gw_builder[formatter](data)
-    api_gw = builder.with_version().with_metadata().with_route_specification().build()
+    api_gw = builder.with_version()\
+        .with_namespace()\
+        .with_metadata()\
+        .with_route_specification()\
+        .build()
 
     return api_gw
