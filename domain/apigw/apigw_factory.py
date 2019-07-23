@@ -3,8 +3,10 @@
 import yaml
 from .apigw import ApiGW
 from .metadata import Metadata
+from .route_specification import RouteSpecification
 from .apigw_validator import create_api_gw_validator
 from ..exception.ApiGWMetadataError import ApiGWMetadataError
+from ..exception.ApiGWRouteSpecificationError import ApiGWRouteSpecificationError
 
 
 class ApiGWBuilder(object):
@@ -52,6 +54,11 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         return self
 
     def with_route_specification(self):
+        if self.validator.check_route_specification(self.json_source["routeSpecification"]) is True:
+            self.route_specification = self.json_source["routeSpecification"]
+        else:
+            raise ApiGWRouteSpecificationError()
+
         return self
 
     def build(self):
@@ -59,6 +66,7 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         api_gw.version = self.version
         api_gw.namespace = self.namespace
         api_gw.metadata = Metadata(self.metadata)
+        api_gw.route_specification = RouteSpecification(self.route_specification)
         return api_gw
 
 

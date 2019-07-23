@@ -5,6 +5,8 @@ from ..ddd import ValueObject
 
 class RouteSpecification(ValueObject):
 
-    def check_mailbox(self):
-        pass
+    def __init__(self, data):
+        super().__init__()
+        self.routes = data
+
 
