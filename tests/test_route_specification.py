@@ -5,7 +5,7 @@ from domain.apigw.route_specification import RouteSpecification
 _test_route_specification = {
     "apiRef": "Warehouse Inventory",
     "upstreamRef": "Inventory",
-    "policies":{
+    "policies": {
         "authentication": {
             "type": "Basic"
         }
