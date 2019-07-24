@@ -6,7 +6,7 @@ import uuid
 
 class Entity(object):
 
-    def __init__(self, id_: uuid.UUID):
+    def __init__(self, id_=uuid.uuid1()):
         super(Entity, self).__init__()
         self.id = id_
 

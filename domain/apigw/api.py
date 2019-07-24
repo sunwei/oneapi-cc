@@ -16,6 +16,6 @@ class Api(Entity, Prototype):
     def clone(self, **kwargs):
         api_copy = self.__class__(self.name, self.path, self.specs)
         api_copy.__dict__.update(**kwargs)
-        api_copy.id = uuid.UUID()
+        api_copy.id = uuid.uuid1()
         return api_copy
 
