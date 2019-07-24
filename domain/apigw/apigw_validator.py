@@ -7,10 +7,13 @@ class ApiGWValidator(object):
     def check_metadata(self, metadata):
         raise NotImplementedError
 
-    def check_route_specification(self, route_specification):
+    def check_api(self, metadata):
         raise NotImplementedError
 
-    def check_proxy(self, proxy):
+    def check_upstream(self, metadata):
+        raise NotImplementedError
+
+    def check_route_specification(self, route_specification):
         raise NotImplementedError
 
 
@@ -25,20 +28,31 @@ class ApiGWValidatorV1(ApiGWValidator):
                 check_result = True
         return check_result
 
-    def check_proxy(self, proxy):
+    def check_api(self, api):
         check_result = False
-        if 'path' in proxy and 'endpoints' in proxy:
-            if proxy['endpoints']:
+        if api is not None:
+            if 'name' in api \
+                    and 'specs' in api \
+                    and 'path' in api \
+                    and 'description' in api:
+                check_result = True
+        return check_result
+
+    def check_upstream(self, metadata):
+        check_result = False
+        if metadata is not None:
+            if 'name' in metadata \
+                    and 'endpoints' in metadata:
                 check_result = True
         return check_result
 
     def check_route_specification(self, route_specification):
         check_result = False
-        if route_specification is not None and route_specification:
-            for proxy in route_specification:
-                check_result = self.check_proxy(proxy)
-                if check_result is False:
-                    break
+        if route_specification is not None:
+            if 'apiRef' in route_specification \
+                and 'upstreamRef' in route_specification \
+                    and 'policies' in route_specification:
+                check_result = True
         return check_result
 
 

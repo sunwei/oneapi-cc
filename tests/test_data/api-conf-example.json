@@ -31,12 +31,7 @@
         "api1.com",
         "api2.com",
         "api3.com"
-      ],
-      "policies":{
-        "authentication": {
-          "type": "Basic"
-        }
-      }
+      ]
     },
     {
       "name": "Pricing",

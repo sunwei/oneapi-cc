@@ -2,12 +2,12 @@
   "version": "v1",
   "namespace": "warehouse",
   "metadata": {
+    "repository": "https://github.com/sunwei/flask-saml2-okta",
+    "description": "used for what...",
     "annotations": "labels or tags..."
   },
   "apis": [
     {
-      "name": "Warehouse Inventory",
-      "specs": "https://example.com/swagger.json",
       "path": "/warehouse/inventory",
       "description": "used for what...",
       "annotations": "labels or tags..."
@@ -22,17 +22,11 @@
   ],
   "upstreams": [
     {
-      "name": "Inventory",
       "endpoints": [
         "api1.com",
         "api2.com",
         "api3.com"
-      ],
-      "policies":{
-        "authentication": {
-          "type": "Basic"
-        }
-      }
+      ]
     },
     {
       "name": "Pricing",
@@ -45,7 +39,6 @@
   ],
   "routeSpecification": [
     {
-      "apiRef": "Warehouse Inventory",
       "upstreamRef": "Inventory",
       "policies":{
         "authentication": {
