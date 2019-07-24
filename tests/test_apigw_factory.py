@@ -27,7 +27,7 @@ def test_api_gw_with_version_1(api_gw_json_data):
 def test_api_gw_with_namespace(api_gw_json_data):
     api_gw_instance = create_api_gw("json", data=api_gw_json_data)
 
-    assert api_gw_instance.namespace == "default"
+    assert api_gw_instance.namespace == "warehouse"
 
 
 @pytest.mark.usefixtures("api_gw_json_data")

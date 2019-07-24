@@ -4,5 +4,5 @@
 
 class ValueObject(object):
     def same_as(self, other):
-        pass
+        return self == other
 

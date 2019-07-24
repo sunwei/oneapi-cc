@@ -5,11 +5,18 @@ from ..ddd import ValueObject
 
 class Metadata(ValueObject):
 
-    def __init__(self, data):
+    def __init__(self, author, email, repository, description):
         super().__init__()
-        self.name = data["name"]
-        self.author = data["author"]
-        self.email = data["email"]
-        self.repository = data["repository"]
-        self.description = data["description"]
-        self.annotations = data["annotations"]
+        self.author = author
+        self.email = email
+        self.repository = repository
+        self.description = description
+
+    def __eq__(self, other):
+        if not isinstance(other, Metadata):
+            return NotImplemented
+
+        return self.author == other.author \
+            and self.email == other.email \
+            and self.repository == other.repository \
+            and self.description == other.description

@@ -16,10 +16,10 @@ class ApiGWBuilder(object):
     def with_metadata(self):
         raise NotImplementedError
 
-    def with_api(self):
+    def with_apis(self):
         raise NotImplementedError
 
-    def with_upstream(self):
+    def with_upstreams(self):
         raise NotImplementedError
 
     def with_route_specification(self):
@@ -53,10 +53,10 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         self.namespace = self.json_source["namespace"] or "default"
         return self
 
-    def with_api(self):
+    def with_apis(self):
         raise NotImplementedError
 
-    def with_upstream(self):
+    def with_upstreams(self):
         raise NotImplementedError
 
     def with_metadata(self):
@@ -68,10 +68,10 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         return self
 
     def with_route_specification(self):
-        if self.validator.check_route_specification(self.json_source["routeSpecification"]) is True:
-            self.route_specification = self.json_source["routeSpecification"]
-        else:
-            raise ApiGWRouteSpecificationError()
+        for route_spec in self.json_source["routeSpecification"]:
+            if self.validator.check_route_specification(route_spec) is False:
+                raise ApiGWRouteSpecificationError()
+        self.route_specification = self.json_source["routeSpecification"]
 
         return self
 
@@ -79,8 +79,13 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         api_gw = ApiGW()
         api_gw.version = self.version
         api_gw.namespace = self.namespace
-        api_gw.metadata = Metadata(self.metadata)
-        api_gw.route_specification = RouteSpecification(self.route_specification)
+        api_gw.metadata = Metadata(
+            author=self.metadata["author"],
+            email=self.metadata["email"],
+            repository=self.metadata["repository"],
+            description=self.metadata["description"]
+        )
+        # api_gw.route_specification = RouteSpecification(self.route_specification)
         return api_gw
 
 
