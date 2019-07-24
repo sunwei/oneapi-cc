@@ -16,6 +16,12 @@ class ApiGWBuilder(object):
     def with_metadata(self):
         raise NotImplementedError
 
+    def with_api(self):
+        raise NotImplementedError
+
+    def with_upstream(self):
+        raise NotImplementedError
+
     def with_route_specification(self):
         raise NotImplementedError
 
@@ -30,6 +36,8 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         self.version = None
         self.namespace = None
         self.metadata = None
+        self.apis = None
+        self.upstreams = None
         self.route_specification = None
         self.validator = None
 
@@ -44,6 +52,12 @@ class ApiGWJsonBuilder(ApiGWBuilder):
     def with_namespace(self):
         self.namespace = self.json_source["namespace"] or "default"
         return self
+
+    def with_api(self):
+        raise NotImplementedError
+
+    def with_upstream(self):
+        raise NotImplementedError
 
     def with_metadata(self):
         if self.validator.check_metadata(self.json_source["metadata"]) is True:

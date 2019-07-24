@@ -2,8 +2,8 @@
 """Domain Driven Design framework."""
 
 
-class ApiFactory:
+class Prototype:
 
-    def __init__(self):
+    def clone(self):
         pass
 

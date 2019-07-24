@@ -18,7 +18,7 @@ class ApiGWValidatorV1(ApiGWValidator):
     def check_metadata(self, metadata):
         check_result = False
         if metadata is not None:
-            if 'name' in metadata \
+            if 'author' in metadata \
                     and 'email' in metadata \
                     and 'description' in metadata \
                     and 'repository' in metadata:

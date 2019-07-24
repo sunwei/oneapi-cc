@@ -1,10 +1,21 @@
 # -*- coding: utf-8 -*-
 """Domain Driven Design framework."""
-from ..ddd import Aggregate
+import uuid
+from ..ddd import Entity
+from .prototype import Prototype
 
 
-class Api(Aggregate):
+class Api(Entity, Prototype):
 
-    def check_mailbox(self):
-        pass
+    def __init__(self, name, path, specs):
+        super().__init__()
+        self.name = name
+        self.path = path
+        self.specs = specs
+
+    def clone(self, **kwargs):
+        api_copy = self.__class__(self.name, self.path, self.specs)
+        api_copy.__dict__.update(**kwargs)
+        api_copy.id = uuid.UUID()
+        return api_copy
 
