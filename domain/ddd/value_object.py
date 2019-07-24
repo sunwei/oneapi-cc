@@ -1,18 +1,8 @@
 # -*- coding: utf-8 -*-
 """Domain Driven Design framework - Value Object."""
-import copy
 
 
 class ValueObject(object):
+    def same_as(self, other):
+        pass
 
-    def __eq__(self, other):
-        if not isinstance(other, ValueObject):
-            return NotImplemented
-
-        return self.id == other.id
-
-    def __copy__(self):
-        return ValueObject(self.name)
-
-    def __deepcopy__(self):
-        return ValueObject(copy.deepcopy(self.name))
