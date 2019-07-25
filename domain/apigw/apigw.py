@@ -12,5 +12,5 @@ class ApiGW(Aggregate):
         self.metadata = None
         self.apis = []
         self.upstreams = []
-        self.route_specification = None
+        self.route_specifications = []
 

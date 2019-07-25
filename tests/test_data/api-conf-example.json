@@ -41,7 +41,7 @@
       ]
     }
   ],
-  "routeSpecification": [
+  "routeSpecifications": [
     {
       "apiRef": "Warehouse Inventory",
       "upstreamRef": "Inventory",

@@ -80,10 +80,10 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         return self
 
     def with_route_specification(self):
-        for route_spec in self.json_source["routeSpecification"]:
+        for route_spec in self.json_source["routeSpecifications"]:
             if self.validator.check_route_specification(route_spec) is False:
                 raise ApiGWRouteSpecificationError()
-        self.route_specification = self.json_source["routeSpecification"]
+        self.route_specification = self.json_source["routeSpecifications"]
 
         return self
 
@@ -119,6 +119,14 @@ class ApiGWJsonBuilder(ApiGWBuilder):
                 )
                 api_gw.upstreams.append(another_upstream)
 
+    def _init_route_specification(self, api_gw):
+        for idx, val in enumerate(self.route_specification):
+            api_gw.route_specifications.append(RouteSpecification(
+                api_ref=val["apiRef"],
+                upstream_ref=val["upstreamRef"],
+                policies=val["policies"]
+            ))
+
     def build(self):
         api_gw = ApiGW()
         api_gw.version = self.version
@@ -131,8 +139,8 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         )
         self._init_apis(api_gw)
         self._init_upstreams(api_gw)
+        self._init_route_specification(api_gw)
 
-        # api_gw.route_specification = RouteSpecification(self.route_specification)
         return api_gw
 
 

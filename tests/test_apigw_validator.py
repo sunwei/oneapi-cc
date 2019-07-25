@@ -58,12 +58,12 @@ def test_v1_check_upstream_with_wrong_format(api_gw_wrong_json_data):
 @pytest.mark.usefixtures("api_gw_json_data")
 def test_v1_check_route_specification_with_right_format(api_gw_json_data):
     api_gw_validator_instance = create_api_gw_validator("v1")
-    result = api_gw_validator_instance.check_route_specification(api_gw_json_data["routeSpecification"][0])
+    result = api_gw_validator_instance.check_route_specification(api_gw_json_data["routeSpecifications"][0])
     assert result is True
 
 
 @pytest.mark.usefixtures("api_gw_wrong_json_data")
 def test_v1_check_route_specification_with_wrong_format(api_gw_wrong_json_data):
     api_gw_validator_instance = create_api_gw_validator("v1")
-    result = api_gw_validator_instance.check_route_specification(api_gw_wrong_json_data["routeSpecification"][0])
+    result = api_gw_validator_instance.check_route_specification(api_gw_wrong_json_data["routeSpecifications"][0])
     assert result is False

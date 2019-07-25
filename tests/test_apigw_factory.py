@@ -77,16 +77,18 @@ def test_api_gw_with_upstream_wrong_data(api_gw_wrong_upstream_json_data):
         assert create_api_gw("json", data=api_gw_wrong_upstream_json_data)
 
 
-# @pytest.mark.usefixtures("api_gw_json_data")
-# def test_api_gw_with_route_specification(api_gw_json_data):
-#     api_gw_instance = create_api_gw("json", data=api_gw_json_data)
-#
-#     assert type(api_gw_instance.route_specification) is RouteSpecification
-#
-#
-# @pytest.mark.usefixtures("api_gw_wrong_route_specification_json_data")
-# def test_api_gw_with_route_specification_wrong_data(api_gw_wrong_route_specification_json_data):
-#     with pytest.raises(ApiGWRouteSpecificationError):
-#         assert create_api_gw("json", data=api_gw_wrong_route_specification_json_data)
-#
+@pytest.mark.usefixtures("api_gw_json_data")
+def test_api_gw_with_route_specification(api_gw_json_data):
+    api_gw_instance = create_api_gw("json", data=api_gw_json_data)
+
+    assert api_gw_instance.route_specifications is not None
+    assert type(api_gw_instance.route_specifications[0]) is RouteSpecification
+    assert type(api_gw_instance.route_specifications[1]) is RouteSpecification
+
+
+@pytest.mark.usefixtures("api_gw_wrong_route_specification_json_data")
+def test_api_gw_with_route_specification_wrong_data(api_gw_wrong_route_specification_json_data):
+    with pytest.raises(ApiGWRouteSpecificationError):
+        assert create_api_gw("json", data=api_gw_wrong_route_specification_json_data)
+
 

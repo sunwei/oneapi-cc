@@ -37,7 +37,7 @@
       ]
     }
   ],
-  "routeSpecification": [
+  "routeSpecifications": [
     {
       "upstreamRef": "Inventory",
       "policies":{
