@@ -3,10 +3,12 @@
 import yaml
 from .apigw import ApiGW
 from .metadata import Metadata
+from .api import Api
 from .route_specification import RouteSpecification
 from .apigw_validator import create_api_gw_validator
-from ..exception.ApiGWMetadataError import ApiGWMetadataError
-from ..exception.ApiGWRouteSpecificationError import ApiGWRouteSpecificationError
+from ..exception.metadata_error import ApiGWMetadataError
+from ..exception.api_error import ApiGWApiError
+from ..exception.route_specification_error import ApiGWRouteSpecificationError
 
 
 class ApiGWBuilder(object):
@@ -54,7 +56,11 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         return self
 
     def with_apis(self):
-        raise NotImplementedError
+        for api in self.json_source["apis"]:
+            if self.validator.check_api(api) is False:
+                raise ApiGWApiError
+        self.apis = self.json_source["apis"]
+        return self
 
     def with_upstreams(self):
         raise NotImplementedError
@@ -75,6 +81,23 @@ class ApiGWJsonBuilder(ApiGWBuilder):
 
         return self
 
+    def _init_apis(self, api_gw):
+        for idx, val in enumerate(self.apis):
+            if 0 == idx:
+                api_gw.apis.append(Api(
+                    name=val["name"],
+                    path=val["path"],
+                    specs=val["specs"]
+                ))
+            else:
+                template_api = api_gw.apis[0]
+                another_api = template_api.clone(
+                    name=val["name"],
+                    path=val["path"],
+                    specs=val["specs"]
+                )
+                api_gw.apis.append(another_api)
+
     def build(self):
         api_gw = ApiGW()
         api_gw.version = self.version
@@ -85,6 +108,9 @@ class ApiGWJsonBuilder(ApiGWBuilder):
             repository=self.metadata["repository"],
             description=self.metadata["description"]
         )
+        self._init_apis(api_gw)
+
+
         # api_gw.route_specification = RouteSpecification(self.route_specification)
         return api_gw
 
@@ -100,6 +126,7 @@ def create_api_gw(formatter="yaml", data=None):
     api_gw = builder.with_version()\
         .with_namespace()\
         .with_metadata()\
+        .with_apis()\
         .with_route_specification()\
         .build()
 

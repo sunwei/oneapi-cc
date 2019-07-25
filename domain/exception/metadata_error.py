@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """Domain Driven Design framework."""
-from .ApiGWBaseException import ApiGWBaseException
+from .api_gateway_base_exception import ApiGWBaseException
 
 
 class ApiGWMetadataError(ApiGWBaseException):

@@ -10,7 +10,7 @@ class ApiGW(Aggregate):
         self.version = None
         self.namespace = None
         self.metadata = None
-        self.apis = None
-        self.upstreams = None
+        self.apis = []
+        self.upstreams = []
         self.route_specification = None
 
