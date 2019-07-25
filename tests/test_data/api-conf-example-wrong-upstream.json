@@ -25,7 +25,6 @@
   ],
   "upstreams": [
     {
-      "name": "Inventory",
       "endpoints": [
         "api1.com",
         "api2.com",
@@ -43,6 +42,8 @@
   ],
   "routeSpecification": [
     {
+      "apiRef": "Warehouse Inventory",
+      "upstreamRef": "Inventory",
       "policies":{
         "authentication": {
           "type": "Basic"

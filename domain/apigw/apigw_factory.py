@@ -4,10 +4,12 @@ import yaml
 from .apigw import ApiGW
 from .metadata import Metadata
 from .api import Api
+from .upstream import Upstream
 from .route_specification import RouteSpecification
 from .apigw_validator import create_api_gw_validator
 from ..exception.metadata_error import ApiGWMetadataError
 from ..exception.api_error import ApiGWApiError
+from ..exception.upstream_error import ApiGWUpstreamError
 from ..exception.route_specification_error import ApiGWRouteSpecificationError
 
 
@@ -63,7 +65,11 @@ class ApiGWJsonBuilder(ApiGWBuilder):
         return self
 
     def with_upstreams(self):
-        raise NotImplementedError
+        for upstream in self.json_source["upstreams"]:
+            if self.validator.check_upstream(upstream) is False:
+                raise ApiGWUpstreamError
+        self.upstreams = self.json_source["upstreams"]
+        return self
 
     def with_metadata(self):
         if self.validator.check_metadata(self.json_source["metadata"]) is True:
@@ -98,6 +104,21 @@ class ApiGWJsonBuilder(ApiGWBuilder):
                 )
                 api_gw.apis.append(another_api)
 
+    def _init_upstreams(self, api_gw):
+        for idx, val in enumerate(self.upstreams):
+            if 0 == idx:
+                api_gw.upstreams.append(Upstream(
+                    name=val["name"],
+                    endpoints=val["endpoints"]
+                ))
+            else:
+                template_upstream = api_gw.upstreams[0]
+                another_upstream = template_upstream.clone(
+                    name=val["name"],
+                    endpoints=val["endpoints"]
+                )
+                api_gw.upstreams.append(another_upstream)
+
     def build(self):
         api_gw = ApiGW()
         api_gw.version = self.version
@@ -109,7 +130,7 @@ class ApiGWJsonBuilder(ApiGWBuilder):
             description=self.metadata["description"]
         )
         self._init_apis(api_gw)
-
+        self._init_upstreams(api_gw)
 
         # api_gw.route_specification = RouteSpecification(self.route_specification)
         return api_gw
@@ -127,6 +148,7 @@ def create_api_gw(formatter="yaml", data=None):
         .with_namespace()\
         .with_metadata()\
         .with_apis()\
+        .with_upstreams()\
         .with_route_specification()\
         .build()
 
