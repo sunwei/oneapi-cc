@@ -5,7 +5,7 @@ from flask import Blueprint, request
 blueprint = Blueprint('user', __name__)
 
 
-@blueprint.route('/api/user', methods=('GET',))
+@blueprint.route('/user', methods=('GET',))
 def get_user():
-    return "my name is Dummy"
+    return "my name is Dummy: "
 

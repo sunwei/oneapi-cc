@@ -23,6 +23,7 @@ def create_app(config=None):
 
 
 def register_blueprints(app):
+    app.register_blueprint(user.views.blueprint, url_prefix="/v1")
     app.register_blueprint(user.views.blueprint)
     app.register_blueprint(nginx.views.blueprint)
 
