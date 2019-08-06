@@ -2,4 +2,9 @@
 
 Flask
 simplejson
+ddd-base
+ddd-api-gateway
+ddd-nginx
+flask-apispec
 pyyaml
+apispec
