@@ -8,7 +8,7 @@ from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_apispec.extension import FlaskApiSpec
 from oneapi import user, profile, commands
-from oneapi.user.views import (register_user)
+from oneapi.user.views import (register_user, login_user)
 from oneapi.profile.views import (get_profile)
 from oneapi.exceptions import InvalidUsage
 
@@ -77,15 +77,15 @@ def register_docs(app):
         'APISPEC_SPEC': APISpec(
             title='RESTful API for oneapi.cc backend',
             version='v1',
-            openapi_version="3.0.0",
+            openapi_version="2.0.0",
             plugins=[MarshmallowPlugin()],
         ),
         'APISPEC_SWAGGER_URL': '/swagger/',
     })
     docs = FlaskApiSpec(app)
-    # docs.register(register_user, endpoint="register_user", blueprint="user")
-    # docs.register(login_user, blueprint="user")
-    # docs.register(get_profile, blueprint="profile")
+    docs.register(register_user, endpoint="register_user", blueprint="user")
+    docs.register(login_user, blueprint="user")
+    docs.register(get_profile, blueprint="profiles")
 
 
 def register_commands(app):
