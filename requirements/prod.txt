@@ -1,10 +1,19 @@
 # Everything we needed in production environment
 
 Flask
+flask-apispec>=0.8.1
+SQLAlchemy==1.1.9
+Flask_Caching
+Flask_SQLAlchemy==2.2
+Flask_Bcrypt
+Flask-Migrate
+Flask-Cors
+PyJWT
+marshmallow
+Flask-JWT-Extended
 simplejson
 ddd-base
 ddd-api-gateway
 ddd-nginx
-flask-apispec
 pyyaml
 apispec
