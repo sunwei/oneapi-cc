@@ -10,7 +10,6 @@ class UserSchema(Schema):
     token = fields.Str(dump_only=True)
     createdAt = fields.DateTime(attribute='created_at', dump_only=True)
     updatedAt = fields.DateTime(attribute='updated_at')
-    # ugly hack.
     user = fields.Nested('self', exclude=('user',), default=True, load_only=True)
 
     @pre_load
