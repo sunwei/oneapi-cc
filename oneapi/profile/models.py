@@ -1,6 +1,6 @@
 from flask_jwt_extended import current_user
 
-from oneapi.database import (Model, SurrogatePK, db, reference_col, relationship)
+from oneapi.database import (Model, Column, SurrogatePK, db, reference_col, relationship)
 
 
 followers_assoc = db.Table("followers_assoc",
@@ -22,6 +22,8 @@ class UserProfile(Model, SurrogatePK):
                            secondaryjoin=id == followers_assoc.c.followed_by,
                            backref='followed_by',
                            lazy='dynamic')
+    bio = Column(db.String(300), nullable=True)
+    image = Column(db.String(120), nullable=True)
 
     def __init__(self, user, **kwargs):
         db.Model.__init__(self, user=user, **kwargs)
@@ -50,14 +52,6 @@ class UserProfile(Model, SurrogatePK):
     @property
     def username(self):
         return self.user.username
-
-    @property
-    def bio(self):
-        return self.user.bio
-
-    @property
-    def image(self):
-        return self.user.image
 
     @property
     def email(self):

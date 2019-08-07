@@ -13,3 +13,6 @@ register:
 	curl -H 'Content-Type: application/json' -X POST -d \
 	  '{"user": {"username":"wayde", "password":"abcd", "email":"wayde@gmail.com"}}' \
 	  http://localhost:5000/api/users
+
+clean:
+	rm -rf dev.db && rm -rf migrations
