@@ -1,6 +1,8 @@
 # oneapi-cc
 oneapi.cc
 
+[![CircleCI](https://circleci.com/gh/sunwei/oneapi-cc.svg?style=svg)](https://circleci.com/gh/sunwei/oneapi-cc)
+
 ### Development
 
 ```bash
