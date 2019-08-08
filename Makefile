@@ -22,3 +22,6 @@ heroku-login:
 
 heroku-dev-token:
 	heroku auth:token
+
+heroku-db-upgrade:
+	heroku run upgrade --app oneapi-server
