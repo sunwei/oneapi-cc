@@ -16,3 +16,9 @@ register:
 
 clean:
 	rm -rf dev.db && rm -rf migrations
+
+heroku-login:
+	heroku auth:login
+
+heroku-dev-token:
+	heroku auth:token

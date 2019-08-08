@@ -1,34 +1,47 @@
 version: 2.1
 jobs:
   unit-test:
+    docker:
+      - image: circleci/python:3.6.5
+    working_directory: ~/oneapi-cc
+    steps:
+      - checkout
+      - restore_cache:
+          keys:
+            - unit-test-dependencies-{{ checksum "requirements/dev.txt" }}
+      - run:
+        command: |
+          sudo apt-get update && sudo apt-get install -y python-setuptools libxmlsec1 libxmlsec1-dev
+          python3 -m venv env
+          source ./env/bin/activate
+          pip install --upgrade pip
+          pip install -r requirements/dev.txt
+      - save_cache:
+          paths:
+            - ./venv
+          key: unit-test-dependencies-{{ checksum "requirements/dev.txt" }}
+      - run:
+        command: |
+          source ./env/bin/activate
+          pytest --cov=./oneapi --cov-report=html --html=./htmlcov/report.html --self-contained-html
+      - store_artifacts:
+        path: htmlcov
+  deploy-dev:
+      working_directory: ~/repo
       docker:
-          - image: circleci/python:3.6.5
-      working_directory: ~/oneapi-cc
+        - image: docker:stable-git
       steps:
-          - checkout
-          - restore_cache:
-              keys:
-                  - unit-test-dependencies-{{ checksum "requirements/dev.txt" }}
-          - run:
-              command: |
-                  sudo apt-get update && sudo apt-get install -y python-setuptools libxmlsec1 libxmlsec1-dev
-                  python3 -m venv env
-                  source ./env/bin/activate
-                  pip install --upgrade pip
-                  pip install -r requirements/dev.txt
-          - save_cache:
-              paths:
-                  - ./venv
-              key: unit-test-dependencies-{{ checksum "requirements/dev.txt" }}
-          - run:
-              command: |
-                  source ./env/bin/activate
-                  pytest --cov=./oneapi --cov-report=html --html=./htmlcov/report.html --self-contained-html
-          - store_artifacts:
-              path: htmlcov
+        - checkout
+        - run:
+          name: Deploy to Heroku
+          command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+
 
 workflows:
   version: 2.1
   cicd:
     jobs:
       - unit-test
+      - deploy-dev:
+        requires:
+          - unit-test
