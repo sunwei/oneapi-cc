@@ -1,0 +1,6 @@
+python-setuptools
+libxmlsec1
+libxmlsec1-dev
+pkg-config
+build-dep
+python-psycopg2
