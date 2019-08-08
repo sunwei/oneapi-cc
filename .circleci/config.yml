@@ -26,7 +26,8 @@ jobs:
                 pytest --cov=./oneapi --cov-report=html --html=./htmlcov/report.html --self-contained-html
           - store_artifacts:
               path: htmlcov
-  deploy-dev:
+
+  deploy-stg:
       working_directory: ~/repo
       docker:
           - image: docker:stable-git
@@ -42,6 +43,6 @@ workflows:
   cicd:
     jobs:
       - unit-test
-      - deploy-dev:
-        requires:
-          - unit-test
+      - deploy-stg:
+          requires:
+            - unit-test
