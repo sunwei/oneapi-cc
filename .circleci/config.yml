@@ -23,7 +23,7 @@ jobs:
           - run:
               command: |
                   source ./env/bin/activate
-                  pytest --cov=./app --cov-report=html --html=./htmlcov/report.html --self-contained-html
+                  pytest --cov=./oneapi --cov-report=html --html=./htmlcov/report.html --self-contained-html
           - store_artifacts:
               path: htmlcov
 

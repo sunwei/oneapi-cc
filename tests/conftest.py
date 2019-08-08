@@ -1,40 +1,61 @@
 # -*- coding: utf-8 -*-
-"""Test data"""
-import os
+"""Defines fixtures available to all tests."""
+
 import pytest
-import json
+from webtest import TestApp
 
-TEST_PATH = os.path.abspath(os.path.dirname(__file__))
-TEST_DATA_PATH = os.path.join(TEST_PATH, 'test_data')
-
-
-def _get_test_data(filename):
-    api_conf_json_path = os.path.join(TEST_DATA_PATH, filename)
-    with open(api_conf_json_path, encoding='utf-8') as data_file:
-        data = json.loads(data_file.read())
-    return data
+from oneapi.app import create_app
+from oneapi.database import db as _db
+from oneapi.settings import TestConfig
+from oneapi.profile.models import UserProfile
 
 
-@pytest.fixture(name='api_gw_json_data')
-def api_gw_json_data():
-    return _get_test_data('api-conf-example.json')
+from .factories import UserFactory
 
 
-@pytest.fixture(name='api_gw_wrong_json_data')
-def api_gw_wrong_json_data():
-    return _get_test_data('api-conf-example-wrong.json')
+@pytest.yield_fixture(scope='function')
+def app():
+    """An application for the tests."""
+    _app = create_app(TestConfig)
+
+    with _app.app_context():
+        _db.create_all()
+
+    ctx = _app.test_request_context()
+    ctx.push()
+
+    yield _app
+
+    ctx.pop()
 
 
-@pytest.fixture(name='api_gw_wrong_apis_json_data')
-def api_gw_wrong_apis_json_data():
-    return _get_test_data('api-conf-example-wrong-apis.json')
+@pytest.fixture(scope='function')
+def testapp(app):
+    """A Webtest app."""
+    return TestApp(app)
 
 
-@pytest.fixture(name='api_gw_wrong_upstream_json_data')
-def api_gw_wrong_upstream_json_data():
-    return _get_test_data('api-conf-example-wrong-upstream.json')
+@pytest.yield_fixture(scope='function')
+def db(app):
+    """A database for the tests."""
+    _db.app = app
+    with app.app_context():
+        _db.create_all()
+
+    yield _db
+
+    # Explicitly close DB connection
+    _db.session.close()
+    _db.drop_all()
 
 
-@pytest.fixture(name='api_gw_wrong_route_specification_json_data')
-def api_gw_wrong_route_specification_json_data():
-    return _get_test_data('api-conf-example-wrong-route-specification.json')
+@pytest.fixture
+def user(db):
+    """A user for the tests."""
+    class User():
+        def get(self):
+            muser = UserFactory(password='myprecious')
+            UserProfile(muser).save()
+            db.session.commit()
+            return muser
+    return User()
