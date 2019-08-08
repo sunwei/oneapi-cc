@@ -18,3 +18,4 @@ ddd-nginx
 pyyaml
 apispec
 gunicorn==19.9.0
+python-dotenv

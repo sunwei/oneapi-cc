@@ -8,5 +8,3 @@ WebTest
 factory-boy
 pytest-cov==2.7.1
 pytest-html==1.21.1
-
-python-dotenv
