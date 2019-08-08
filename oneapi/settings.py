@@ -33,7 +33,7 @@ class Config(SecretKey, AppDirectory):
 class ProdConfig(Config):
     ENV = 'prod'
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',
+    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL',
                                              'postgresql://localhost/example')
 
 
