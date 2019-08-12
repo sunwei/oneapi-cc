@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 """User views."""
-from flask import Blueprint, request
+from flask import Blueprint, request, current_app
 from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import jwt_required, jwt_optional, create_access_token, current_user
 from sqlalchemy.exc import IntegrityError
+import logging
+from flask_log_request_id import RequestIDLogFilter
 
 from oneapi.database import db
 from oneapi.exceptions import InvalidUsage
@@ -12,6 +14,7 @@ from .models import User
 from .serializers import user_schema
 
 blueprint = Blueprint('user', __name__)
+# logging.LoggerAdapter(logging.getLogger("oneapi.user"), {"request_id": request.id})
 
 
 @blueprint.route('/users', methods=['POST'])
@@ -19,6 +22,7 @@ blueprint = Blueprint('user', __name__)
 @marshal_with(user_schema)
 def register_user(username, password, email, **kwargs):
     try:
+        current_app.logger.debug("abcd.......")
         profile = UserProfile(User(username, email, password=password, **kwargs).save()).save()
         profile.user.token = create_access_token(identity=profile.user)
     except IntegrityError:
@@ -45,7 +49,12 @@ def login_user(email, password, **kwargs):
 @marshal_with(user_schema)
 def get_user():
     user = current_user
-    # Not sure about this
+
+    logger = logging.getLogger("request")
+    logger.addFilter(RequestIDLogFilter())
+    logger.debug("lalala")
+    current_app.logger.debug(current_app.logger.name)
+    current_app.logger.debug("abcd.......")
     user.token = request.headers.environ['HTTP_AUTHORIZATION'].split('Token ')[1]
     return current_user
 

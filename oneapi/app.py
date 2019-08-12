@@ -1,12 +1,16 @@
 # -*- coding: utf-8 -*-
 
 """The app module, containing the app factory function."""
+from logging.config import dictConfig
 from flask import Flask
-from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors
-
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_apispec.extension import FlaskApiSpec
+from sqlalchemy import text
+from healthcheck import HealthCheck, EnvironmentDump
+from flask_log_request_id import RequestID
+
+from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors
 from oneapi import user, profile, commands
 from oneapi.user.views import (register_user, login_user)
 from oneapi.profile.views import (get_profile)
@@ -18,6 +22,7 @@ def create_app(config=None):
     app.url_map.strict_slashes = False
     app.config.from_object(config)
 
+    register_logger(app)
     register_shell_context(app)
     register_extensions(app)
     register_error_handlers(app)
@@ -35,6 +40,7 @@ def register_extensions(app):
     db.init_app(app)
     migrate.init_app(app, db)
     jwt.init_app(app)
+    health_check(app)
 
 
 def register_error_handlers(app):
@@ -72,7 +78,6 @@ def register_blueprints(app):
 
 
 def register_docs(app):
-    pass
     app.config.update({
         'APISPEC_SPEC': APISpec(
             title='RESTful API for oneapi.cc backend',
@@ -94,3 +99,28 @@ def register_commands(app):
     app.cli.add_command(commands.clean)
     app.cli.add_command(commands.urls)
 
+
+def register_logger(app):
+    dictConfig(app.config["LOGGING"])
+    RequestID(app)
+
+
+def health_check(app):
+    health = HealthCheck(app, "/healthcheck")
+    env_dump = EnvironmentDump(app, "/environment")
+
+    # noinspection PyBroadException
+    def db_available():
+        try:
+            db.session.query("1").from_statement(text("SELECT 1")).all()
+            return True, "db connection ok"
+        except Exception:
+            return False, "db connection failed"
+
+    health.add_check(db_available)
+
+    def application_data():
+        return {"maintainer": "Wayde Sun",
+                "git_repo": "https://github.com/sunwei/oneapi-cc"}
+
+    env_dump.add_section("application", application_data)

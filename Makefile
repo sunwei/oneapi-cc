@@ -1,5 +1,10 @@
 CUR_DIR = $(CURDIR)
 
+mac-install:
+	brew install postgresql
+	export LDFLAGS="-L/usr/local/opt/openssl/lib"
+	pip3 install -r requirements/dev.txt
+
 install:
 	pip3 install -r requirements/dev.txt
 
@@ -11,12 +16,12 @@ db:
 
 register:
 	curl -H 'Content-Type: application/json' -X POST -d \
-	  '{"user": {"username":"wayde", "password":"abcd", "email":"wayde@gmail.com"}}' \
+	  '{"user": {"username":"wayde111", "password":"abcd", "email":"wayde111@gmail.com"}}' \
 	  http://localhost:5000/api/users
 
 get-user:
 	curl -H 'Content-Type: application/json' -X GET \
-	 -H "Authorization: Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjUyMzM0OTIsIm5iZiI6MTU2NTIzMzQ5MiwianRpIjoiMjliNjEwZjMtMmNlNy00NDA5LWIxOWEtZGMzOWU4MmMwZGJjIiwiZXhwIjoxNTY1MjM0MzkyLCJpZGVudGl0eSI6MSwiZnJlc2giOmZhbHNlLCJ0eXBlIjoiYWNjZXNzIn0.oaDglDOMG6A8TvdmhGGrCc2Z2w_78BbiHqk6M4UL1kU" \
+	 -H "Authorization: Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjUzMzU0NzUsIm5iZiI6MTU2NTMzNTQ3NSwianRpIjoiMjk2YmJhMTgtMTVhZC00MzJkLWJjNWEtMmJlYzQ3ZGNjYmIwIiwiZXhwIjo4Nzk2NTMzNTQ3NSwiaWRlbnRpdHkiOjEsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.QVGpxdh6lVssRor1PJ-besyLMKgFnN9WuFoF-53pmqs" \
 	  http://localhost:5000/api/user
 
 clean:

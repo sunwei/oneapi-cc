@@ -20,3 +20,5 @@ apispec
 gunicorn==19.9.0
 python-dotenv
 psycopg2
+healthcheck>=1.3.3
+flask-log-request-id
