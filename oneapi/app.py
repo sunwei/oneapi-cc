@@ -1,16 +1,14 @@
 # -*- coding: utf-8 -*-
 
 """The app module, containing the app factory function."""
-from logging.config import dictConfig
 from flask import Flask
 from apispec import APISpec
 from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_apispec.extension import FlaskApiSpec
 from sqlalchemy import text
 from healthcheck import HealthCheck, EnvironmentDump
-from flask_log_request_id import RequestID
 
-from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors
+from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors, logger
 from oneapi import user, profile, commands
 from oneapi.user.views import (register_user, login_user)
 from oneapi.profile.views import (get_profile)
@@ -22,7 +20,6 @@ def create_app(config=None):
     app.url_map.strict_slashes = False
     app.config.from_object(config)
 
-    register_logger(app)
     register_shell_context(app)
     register_extensions(app)
     register_error_handlers(app)
@@ -41,6 +38,7 @@ def register_extensions(app):
     migrate.init_app(app, db)
     jwt.init_app(app)
     health_check(app)
+    logger.init_app(app)
 
 
 def register_error_handlers(app):
@@ -98,11 +96,6 @@ def register_commands(app):
     app.cli.add_command(commands.lint)
     app.cli.add_command(commands.clean)
     app.cli.add_command(commands.urls)
-
-
-def register_logger(app):
-    dictConfig(app.config["LOGGING"])
-    RequestID(app)
 
 
 def health_check(app):

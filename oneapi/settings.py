@@ -3,58 +3,6 @@
 import os
 from datetime import timedelta
 
-LOG_REQUEST = 'ONEAPI.CC REQUEST %(asctime)s.%(msecs)03d ' \
-              '%(filename)s:%(lineno)s request_id=%(request_id)s [%(levelname)s]: %(message)s'
-LOG_STANDARD = 'ONEAPI.CC STANDARD %(asctime)s %(name)s %(levelname)s ''%(message)s [in %(pathname)s:%(lineno)d]'
-LOG_SHORT = 'ONEAPI.CC SHORT %(asctime)s [%(levelname)s] %(name)s: %(message)s'
-
-DEFAULT_LOGGING = {
-    'version': 1,
-    'disable_existing_loggers': False,
-    'formatters': {
-        'standard': {'format': LOG_STANDARD},
-        'request': {'format': LOG_REQUEST},
-        'short': {'format': LOG_SHORT},
-    },
-    'handlers': {
-        'default': {
-            'level': 'INFO',
-            'formatter': 'standard',
-            'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',
-        },
-        'request': {
-            'level': 'DEBUG',
-            'formatter': 'request',
-            'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',
-        },
-        'short': {
-            'level': 'INFO',
-            'formatter': 'short',
-            'class': 'logging.StreamHandler',
-            'stream': 'ext://sys.stdout',  # Default is stderr
-        },
-    },
-    'loggers': {
-        '': {  # root logger
-            'handlers': ['default'],
-            'level': 'INFO',
-            'propagate': True
-        },
-        'request': {
-            'handlers': ['request'],
-            'level': 'DEBUG',
-            'propagate': True
-        },
-        'werkzeug': {
-            'handlers': ['short'],
-            'level': 'INFO',
-            'propagate': True
-        },
-    }
-}
-
 
 class SecretKey(object):
     SECRET_KEY = os.environ.get('ONEAPI_CC_SECRET', 'i-fell-not-good')
@@ -80,7 +28,6 @@ class Config(SecretKey, AppDirectory):
         'http://localhost:4100',
     ]
     JWT_HEADER_TYPE = 'Token'
-    LOGGING = DEFAULT_LOGGING
 
 
 class ProdConfig(Config):
