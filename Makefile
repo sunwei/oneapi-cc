@@ -1,4 +1,4 @@
-CUR_DIR = $(CURDIR)
+CUR_TOKEN = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjczOTA1MDAsIm5iZiI6MTU2NzM5MDUwMCwianRpIjoiNmRlMjA1ZWItNGQyMy00MjI0LTgwNDQtNzkzMWE1N2RmY2UxIiwiZXhwIjo4Nzk2NzM5MDUwMCwiaWRlbnRpdHkiOjEsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.ImkEhbYIJI3yYI2Nu9sZGRgmXPDAS8uREYjZW1OZbNk
 
 mac-install:
 	brew install postgresql
@@ -16,13 +16,23 @@ db:
 
 register:
 	curl -H 'Content-Type: application/json' -X POST -d \
-	  '{"user": {"username":"wayde111", "password":"abcd", "email":"wayde111@gmail.com"}}' \
+	  '{"user": {"username":"wayde222", "password":"abcd", "email":"wayde222@gmail.com"}}' \
 	  http://localhost:5000/api/users
 
 get-user:
 	curl -H 'Content-Type: application/json' -X GET \
-	 -H "Authorization: Token eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjUzMzU0NzUsIm5iZiI6MTU2NTMzNTQ3NSwianRpIjoiMjk2YmJhMTgtMTVhZC00MzJkLWJjNWEtMmJlYzQ3ZGNjYmIwIiwiZXhwIjo4Nzk2NTMzNTQ3NSwiaWRlbnRpdHkiOjEsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.QVGpxdh6lVssRor1PJ-besyLMKgFnN9WuFoF-53pmqs" \
+	 -H "Authorization: Token $(CUR_TOKEN)" \
 	  http://localhost:5000/api/user
+	  
+create-namespace:
+	curl -H 'Content-Type: application/json' -X POST -d \
+	  '{"namespace": {"name": "api"}}' \
+	  -H "Authorization: Token $(CUR_TOKEN)" \
+	  http://localhost:5000/api/namespaces
+
+get-namespace:
+	curl -H 'Content-Type: application/json' -X GET \
+	  http://localhost:5000/api/namespaces/api
 
 clean:
 	rm -rf dev.db && rm -rf migrations

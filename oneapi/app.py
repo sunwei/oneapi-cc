@@ -9,7 +9,7 @@ from sqlalchemy import text
 from healthcheck import HealthCheck, EnvironmentDump
 
 from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors, logger
-from oneapi import user, profile, commands
+from oneapi import user, profile, namespace, commands
 from oneapi.user.views import (register_user, login_user)
 from oneapi.profile.views import (get_profile)
 from oneapi.exceptions import InvalidUsage
@@ -68,11 +68,14 @@ def register_blueprints(app):
     origins = app.config.get('CORS_ORIGIN_WHITELIST', '*')
     cors.init_app(user.views.blueprint, origins=origins)
     cors.init_app(profile.views.blueprint, origins=origins)
+    cors.init_app(namespace.views.blueprint, origins=origins)
 
     app.register_blueprint(user.views.blueprint, url_prefix="/api/v1")
     app.register_blueprint(user.views.blueprint, url_prefix="/api")
     app.register_blueprint(profile.views.blueprint, url_prefix="/api/v1")
     app.register_blueprint(profile.views.blueprint, url_prefix="/api")
+    app.register_blueprint(namespace.views.blueprint, url_prefix="/api/v1")
+    app.register_blueprint(namespace.views.blueprint, url_prefix="/api")
 
 
 def register_docs(app):

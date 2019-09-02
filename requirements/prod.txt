@@ -15,7 +15,7 @@ Flask-JWT-Extended
 simplejson
 ddd-base
 ddd-api-gateway
-ddd-nginx
+ddd-nginx>=0.1.0
 pyyaml
 apispec
 gunicorn==19.9.0

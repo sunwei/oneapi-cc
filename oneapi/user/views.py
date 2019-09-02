@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 """User views."""
-from flask import Blueprint, request, current_app
+from flask import Blueprint, request
 from flask_apispec import use_kwargs, marshal_with
 from flask_jwt_extended import jwt_required, jwt_optional, create_access_token, current_user
 from sqlalchemy.exc import IntegrityError
@@ -19,7 +19,6 @@ blueprint = Blueprint('user', __name__)
 @marshal_with(user_schema)
 def register_user(username, password, email, **kwargs):
     try:
-        current_app.logger.debug("abcd.......")
         profile = UserProfile(User(username, email, password=password, **kwargs).save()).save()
         profile.user.token = create_access_token(identity=profile.user)
     except IntegrityError:
