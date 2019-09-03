@@ -24,6 +24,13 @@ class User(SurrogatePK, Model):
         else:
             self.password = None
 
+    def __eq__(self, other):
+        if not isinstance(other, User):
+            return NotImplemented
+
+        return self.username == other.username \
+            and self.email == other.email
+
     def set_password(self, password):
         """Set password."""
         self.password = bcrypt.generate_password_hash(password)

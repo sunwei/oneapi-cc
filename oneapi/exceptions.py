@@ -6,13 +6,16 @@ def template(data, code=500):
 
 
 USER_NOT_FOUND = template(['User not found'], code=404)
-USER_ALREADY_REGISTERED = template(['User already registered'], code=422)
+USER_ALREADY_REGISTERED = template(['User already registered'], code=409)
 UNKNOWN_ERROR = template([], code=500)
 ARTICLE_NOT_FOUND = template(['Article not found'], code=404)
 COMMENT_NOT_OWNED = template(['Not your article'], code=422)
 
 NAMESPACE_NOT_FOUND = template(['Namespace not found'], code=404)
-NAMESPACE_ALREADY_REGISTERED = template(['Namespace already registered'], code=422)
+NAMESPACE_ALREADY_REGISTERED = template(['Namespace already registered'], code=409)
+
+UNRECOGNIZED_FILE_FORMAT = template(['Unrecognized file format! Only support yaml or json file now'], code=422)
+APIGW_ERROR = template(['Api gateway error'], code=422)
 
 
 class InvalidUsage(Exception):
@@ -48,3 +51,11 @@ class InvalidUsage(Exception):
     @classmethod
     def namespace_already_registered(cls):
         return cls(**NAMESPACE_ALREADY_REGISTERED)
+
+    @classmethod
+    def unrecognized_file_format(cls):
+        return cls(**UNRECOGNIZED_FILE_FORMAT)
+
+    @classmethod
+    def apigw_error(cls, e):
+        return cls(**APIGW_ERROR)

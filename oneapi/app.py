@@ -9,7 +9,7 @@ from sqlalchemy import text
 from healthcheck import HealthCheck, EnvironmentDump
 
 from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors, logger
-from oneapi import user, profile, namespace, commands
+from oneapi import user, profile, namespace, apigw, commands
 from oneapi.user.views import (register_user, login_user)
 from oneapi.profile.views import (get_profile)
 from oneapi.exceptions import InvalidUsage
@@ -76,6 +76,8 @@ def register_blueprints(app):
     app.register_blueprint(profile.views.blueprint, url_prefix="/api")
     app.register_blueprint(namespace.views.blueprint, url_prefix="/api/v1")
     app.register_blueprint(namespace.views.blueprint, url_prefix="/api")
+    app.register_blueprint(apigw.views.blueprint, url_prefix="/api/v1")
+    app.register_blueprint(apigw.views.blueprint, url_prefix="/api")
 
 
 def register_docs(app):
