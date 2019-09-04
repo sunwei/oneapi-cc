@@ -28,11 +28,18 @@ def create_api(body, **kwargs):
 
     namespace = Namespace.query.filter_by(name=api_gw.namespace).first()
     if not namespace:
-        a_namespace = Namespace(current_user, api_gw.namespace, **kwargs)
-        a_namespace.save()
+        namespace = Namespace(current_user, api_gw.namespace, **kwargs)
+        namespace.save()
     elif namespace.user != current_user:
         raise InvalidUsage.namespace_already_registered()
 
-    a_api = Api(user=current_user, body=body, **kwargs)
+    a_api = Api(
+        user=current_user,
+        namespace=namespace,
+        body=body,
+        repository=api_gw.metadata.repository,
+        description=api_gw.metadata.description,
+        **kwargs
+    )
     a_api.save()
     return a_api

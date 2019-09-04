@@ -18,10 +18,7 @@ class NamespaceSchema(Schema):
 
     @post_dump
     def dump_namespace(self, data):
-        user = data['user']['user']
-        data['owner'] = user['username']
-        del data['user']
-        return data
+        return {'namespace': data}
 
     class Meta:
         strict = True
