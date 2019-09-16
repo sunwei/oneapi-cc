@@ -1,4 +1,4 @@
-CUR_TOKEN = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1Njc1NTc0OTEsIm5iZiI6MTU2NzU1NzQ5MSwianRpIjoiNmZiNGY0NTktNzYyYy00NzljLTkzOWEtZGQ3NjljYTdkZDIzIiwiZXhwIjo4Nzk2NzU1NzQ5MSwiaWRlbnRpdHkiOjEsImZyZXNoIjpmYWxzZSwidHlwZSI6ImFjY2VzcyJ9.ddSuAKXj_1M98xcHsV-D4jxlYV1lY7bZncdQhc-Gc2g
+CUR_TOKEN = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1Njg2MTIzMzQsIm5iZiI6MTU2ODYxMjMzNCwianRpIjoiMDAxZGJmYjUtYzBkYS00YjYxLTg2NGItNmVkNWQ3Zjg0Mjk0IiwiZXhwIjo4Nzk2ODYxMjMzNCwiaWRlbnRpdHkiOjEsImZyZXNoIjp0cnVlLCJ0eXBlIjoiYWNjZXNzIn0.2ahUoErjGGaD3BVHnrRVvhQQSVyiJBKGNtIloC6YI7U
 
 mac-install:
 	brew install postgresql
@@ -23,7 +23,12 @@ get-user:
 	curl -H 'Content-Type: application/json' -X GET \
 	 -H "Authorization: Token $(CUR_TOKEN)" \
 	  http://localhost:5000/api/user
-	  
+
+login:
+	curl -H 'Content-Type: application/json' -X POST -d \
+	  '{"user": {"password":"abcd", "email":"wayde222@gmail.com"}}' \
+       http://localhost:5000/api/users/login
+
 create-namespace:
 	curl -H 'Content-Type: application/json' -X POST -d \
 	  '{"namespace": {"name": "api"}}' \
