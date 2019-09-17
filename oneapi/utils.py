@@ -6,6 +6,11 @@ import base64
 import requests
 from oneapi.user.models import User  # noqa
 
+from ddd_nginx.nginx import Nginx
+from ddd_nginx.server import Server
+from ddd_nginx.location import Location, ReverseProxyStrategy
+from ddd_nginx.upstream import Upstream
+
 
 def jwt_identity(payload):
     return User.get_by_id(payload)
@@ -50,3 +55,57 @@ def push_to_github(filename, repo, branch, token):
         return resp
     else:
         return False
+
+
+def generate_nginx_conf(api_gw):
+    nginx = Nginx(host="oneapi.cc")
+    nginx.namespace = api_gw.namespace
+
+    for upstream in api_gw.upstreams:
+        up_str = Upstream(name=upstream.name)
+        for endpoint in upstream.endpoints:
+            up_str.append(endpoint)
+        nginx.append(up_str)
+
+    a_server = Server(name=nginx.namespace)
+    a_server.set_var("$api_name", "-")
+    nginx.append(a_server)
+
+    internal_location = Location(
+        name="= /_{}".format(api_gw.namespace),
+        proxy=ReverseProxyStrategy('proxy_pass', 'http://$upstream$request_uri'),
+        scope="internal"
+    )
+    internal_location.set_var("$api_name", "Warehouse")
+
+    def get_api(api_ref):
+        the_api = None
+        for a_api in api_gw.apis:
+            if a_api.name == api_ref:
+                the_api = a_api
+                break
+
+        return the_api
+
+    def get_upstream(upstream_ref):
+        the_upstream = None
+        for a_upstream in api_gw.upstreams:
+            if a_upstream.name == upstream_ref:
+                the_upstream = a_upstream
+                break
+
+        return the_upstream
+
+    for route_spec in api_gw.route_specifications:
+        api = get_api(route_spec.api_ref)
+        upstream = get_upstream(route_spec.upstream_ref)
+        a_location = Location(
+            name=api.path,
+            proxy=ReverseProxyStrategy('rewrite', '^ /_{} last'.format(api_gw.namespace))
+        )
+        a_location.set_var("$upstream", upstream.name)
+        nginx.append(a_location)
+    nginx.append(internal_location)
+
+    root_dir = "./dumps_dir"
+    nginx.dumps(root_dir)

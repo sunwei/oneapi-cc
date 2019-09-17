@@ -7,7 +7,7 @@ from flask_apispec import marshal_with, use_kwargs
 from flask_jwt_extended import current_user, jwt_required
 from ddd_api_gateway import (create_api_gw, ApiGWBaseException)
 from oneapi.exceptions import InvalidUsage
-from oneapi.utils import get_dict_from_base64_data
+from oneapi.utils import (get_dict_from_base64_data, generate_nginx_conf)
 from oneapi.namespace.models import Namespace
 
 blueprint = Blueprint('apigw', __name__)
@@ -30,6 +30,8 @@ def create_api(body, **kwargs):
     if not namespace:
         namespace = Namespace(current_user, api_gw.namespace, **kwargs)
         namespace.save()
+        # TODO: creat github file with this namespace
+
     elif namespace.user != current_user:
         raise InvalidUsage.namespace_already_registered()
 
@@ -42,4 +44,7 @@ def create_api(body, **kwargs):
         **kwargs
     )
     a_api.save()
+
+    generate_nginx_conf(api_gw=api_gw)
+
     return a_api
