@@ -4,6 +4,7 @@ import yaml
 import json
 import base64
 import requests
+from flask import current_app
 from oneapi.user.models import User  # noqa
 
 from ddd_nginx.nginx import Nginx
@@ -30,17 +31,38 @@ def get_dict_from_base64_data(base64_encoded_data):
         return None
 
 
-def push_to_github(filename, repo, branch, token):
-    url = "https://api.github.com/repos/"+repo+"/contents/"+filename
+def new_file_github(filename):
+    url = "https://api.github.com/repos/"+current_app.config['GITHUB_REPO']+"/contents/nginx/api_gw.d/"+filename
+    base64content = base64.b64encode('init content...'.encode('utf-8'))
+
+    message = json.dumps({
+        "message": "create",
+        "branch": current_app.config['GITHUB_REPO_BRANCH'],
+        "content": base64content.decode("utf-8")
+    })
+    resp = requests.put(
+        url,
+        data=message,
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": "token " + current_app.config['GITHUB_TOKEN']
+        }
+    )
+    return resp
+
+
+def push_to_github(filename):
+    url = "https://api.github.com/repos/"+current_app.config['GITHUB_REPO']+"/contents/"+filename
     base64content = base64.b64encode(open(filename, "rb").read())
 
-    data = requests.get(url+'?ref='+branch, headers={"Authorization": "token "+token}).json()
+    data = requests.get(url+'?ref='+current_app.config['GITHUB_REPO_BRANCH'],
+                        headers={"Authorization": "token "+current_app.config['GITHUB_TOKEN']}).json()
     sha = data['sha']
 
     if base64content.decode('utf-8')+"\n" != data['content']:
         message = json.dumps({
             "message": "update",
-            "branch": branch,
+            "branch": current_app.config['GITHUB_REPO_BRANCH'],
             "content": base64content.decode("utf-8"),
             "sha": sha
         })
@@ -49,7 +71,7 @@ def push_to_github(filename, repo, branch, token):
             data=message,
             headers={
                 "Content-Type": "application/json",
-                "Authorization": "token " + token
+                "Authorization": "token " + current_app.config['GITHUB_TOKEN']
             }
         )
         return resp
