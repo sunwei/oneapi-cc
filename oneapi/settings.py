@@ -35,9 +35,19 @@ class Config(SecretKey, AppDirectory):
 
 
 class ProdConfig(Config):
-    ENV = 'prod'
+    ENV = os.environ.get('ONEAPI_ENV', 'prod')
     DEBUG = False
-    SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL',
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',
+                                             'postgresql://localhost/example')
+    GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', 'fake-one')
+    GITHUB_REPO = os.environ.get('GITHUB_REPO', 'sunwei/nginx-apigw')
+    GITHUB_REPO_BRANCH = os.environ.get('GITHUB_REPO_BRANCH', 'master')
+
+
+class StgConfig(Config):
+    ENV = os.environ.get('ONEAPI_ENV', 'stg')
+    DEBUG = False
+    SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',
                                              'postgresql://localhost/example')
     GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', 'fake-one')
     GITHUB_REPO = os.environ.get('GITHUB_REPO', 'sunwei/nginx-apigw')
