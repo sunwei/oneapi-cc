@@ -10,7 +10,7 @@ Flask-Migrate
 Flask-Cors
 flask-logger-decorator>=0.1.1
 PyJWT
-marshmallow>=2.19.5
+marshmallow==2.19.5
 Flask-JWT-Extended
 simplejson
 ddd-base

@@ -1,4 +1,7 @@
 CUR_TOKEN = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1Njg2MTIzMzQsIm5iZiI6MTU2ODYxMjMzNCwianRpIjoiMDAxZGJmYjUtYzBkYS00YjYxLTg2NGItNmVkNWQ3Zjg0Mjk0IiwiZXhwIjo4Nzk2ODYxMjMzNCwiaWRlbnRpdHkiOjEsImZyZXNoIjp0cnVlLCJ0eXBlIjoiYWNjZXNzIn0.2ahUoErjGGaD3BVHnrRVvhQQSVyiJBKGNtIloC6YI7U
+APP_LOCAL_URL = http://localhost:5000
+APP_STG_URL = https://oneapi-server-stg.herokuapp.com
+APP_URL = $(APP_STG_URL)
 
 mac-install:
 	brew install postgresql
@@ -17,17 +20,17 @@ db:
 register:
 	curl -H 'Content-Type: application/json' -X POST -d \
 	  '{"user": {"username":"wayde222", "password":"abcd", "email":"wayde222@gmail.com"}}' \
-	  http://localhost:5000/api/users
+	  $(APP_URL)/api/users
 
 get-user:
 	curl -H 'Content-Type: application/json' -X GET \
 	 -H "Authorization: Token $(CUR_TOKEN)" \
-	  http://localhost:5000/api/user
+	  $(APP_URL)/api/user
 
 login:
 	curl -H 'Content-Type: application/json' -X POST -d \
 	  '{"user": {"password":"abcd", "email":"wayde222@gmail.com"}}' \
-       http://localhost:5000/api/users/login
+       $(APP_URL)/api/users/login
 
 create-namespace:
 	curl -H 'Content-Type: application/json' -X POST -d \
