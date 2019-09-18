@@ -29,7 +29,7 @@ class Config(SecretKey, AppDirectory):
     ]
     JWT_HEADER_TYPE = 'Token'
 
-    GITHUB_TOKEN = '79d7714487f64484d7531f7b951b10c736006e7f'
+    GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', 'fake-one')
     GITHUB_REPO = 'sunwei/nginx-apigw'
     GITHUB_REPO_BRANCH = 'master'
 
@@ -39,7 +39,7 @@ class ProdConfig(Config):
     DEBUG = False
     SQLALCHEMY_DATABASE_URI = os.environ.get('PROD_DATABASE_URL',
                                              'postgresql://localhost/example')
-    GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', '79d7714487f64484d7531f7b951b10c736006e7f')
+    GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', 'fake-one')
     GITHUB_REPO = os.environ.get('GITHUB_REPO', 'sunwei/nginx-apigw')
     GITHUB_REPO_BRANCH = os.environ.get('GITHUB_REPO_BRANCH', 'master')
 

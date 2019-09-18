@@ -10,7 +10,8 @@ from oneapi.exceptions import InvalidUsage
 from oneapi.utils import (
     get_dict_from_base64_data,
     generate_nginx_conf,
-    new_file_github
+    new_file_github,
+    push_to_github
 )
 from oneapi.namespace.models import Namespace
 
@@ -49,5 +50,6 @@ def create_api(body, **kwargs):
     a_api.save()
 
     generate_nginx_conf(api_gw=api_gw)
+    push_to_github(api_gw.namespace+'.conf')
 
     return a_api

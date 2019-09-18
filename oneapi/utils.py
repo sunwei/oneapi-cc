@@ -52,8 +52,8 @@ def new_file_github(filename):
 
 
 def push_to_github(filename):
-    url = "https://api.github.com/repos/"+current_app.config['GITHUB_REPO']+"/contents/"+filename
-    base64content = base64.b64encode(open(filename, "rb").read())
+    url = "https://api.github.com/repos/"+current_app.config['GITHUB_REPO']+"/contents/nginx/api_gw.d/"+filename
+    base64content = base64.b64encode(open("./dumps_dir/all-in-one.conf", "rb").read())
 
     data = requests.get(url+'?ref='+current_app.config['GITHUB_REPO_BRANCH'],
                         headers={"Authorization": "token "+current_app.config['GITHUB_TOKEN']}).json()
