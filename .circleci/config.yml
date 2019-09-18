@@ -30,7 +30,7 @@ jobs:
   deploy-stg:
       working_directory: ~/repo
       docker:
-          - image: docker:stable-git
+          - image: circleci/python:3.6.2-stretch-browsers
       steps:
           - checkout
           - run:
