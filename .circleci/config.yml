@@ -34,15 +34,29 @@ jobs:
       steps:
           - checkout
           - run:
-              name: Deploy to Heroku
-              command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+              name: Deploy staing
+              command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_STG.git master
+          
+  deploy-prod:
+        working_directory: ~/repo
+        docker:
+            - image: docker:stable-git
+        steps:
+            - checkout
+            - run:
+                name: Deploy to Heroku
+                command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
 
 
 workflows:
   version: 2.1
-  cicd:
+  oneapi-server:
     jobs:
       - unit-test
       - deploy-stg:
           requires:
             - unit-test
+      - deploy-prod:
+          type: approval
+          requires:
+            - deploy-stg
