@@ -11,6 +11,7 @@ from flask_logger_decorator import debug
 from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors, logger
 from oneapi import user, profile, namespace, apigw, commands
 from oneapi.user.views import (register_user, login_user)
+from oneapi.user.models import User
 from oneapi.profile.views import (get_profile)
 from oneapi.exceptions import InvalidUsage
 
@@ -109,7 +110,7 @@ def health_check(app):
 
     def db_status():
         try:
-            query_result = db.session.query("1").from_statement(text("SELECT 1")).all()
+            query_result = db.session.query(User).from_statement(text("SELECT 1")).all()
             debug("oneapi-sql-logger", str(query_result))
             return True, "db connection ok"
         except Exception as e:
