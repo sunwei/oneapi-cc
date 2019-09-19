@@ -41,7 +41,7 @@ jobs:
               command: bash ./heroku-setup.sh
           - run:
               name: Database upgrade
-                heroku run upgrade --app $HEROKU_APP_NAME_STG
+              command: heroku run upgrade --app $HEROKU_APP_NAME_STG
           
   deploy-prod:
         working_directory: ~/repo
@@ -57,7 +57,7 @@ jobs:
                 command: bash ./heroku-setup.sh
             - run:
                 name: Database upgrade
-                  heroku run upgrade --app $HEROKU_APP_NAME
+                command: heroku run upgrade --app $HEROKU_APP_NAME
 
 
 workflows:
