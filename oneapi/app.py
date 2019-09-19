@@ -7,7 +7,7 @@ from apispec.ext.marshmallow import MarshmallowPlugin
 from flask_apispec.extension import FlaskApiSpec
 from sqlalchemy import text
 from healthcheck import HealthCheck, EnvironmentDump
-
+from flask_logger_decorator import debug
 from oneapi.extensions import bcrypt, cache, db, migrate, jwt, cors, logger
 from oneapi import user, profile, namespace, apigw, commands
 from oneapi.user.views import (register_user, login_user)
@@ -107,15 +107,16 @@ def health_check(app):
     health = HealthCheck(app, "/healthcheck")
     env_dump = EnvironmentDump(app, "/environment")
 
-    # noinspection PyBroadException
-    def db_available():
+    def db_status():
         try:
-            db.session.query("1").from_statement(text("SELECT 1")).all()
+            query_result = db.session.query("1").from_statement(text("SELECT 1")).all()
+            debug("oneapi-sql-logger", str(query_result))
             return True, "db connection ok"
-        except Exception:
+        except Exception as e:
+            debug("oneapi-sql-logger", str(e))
             return False, "db connection failed"
 
-    health.add_check(db_available)
+    health.add_check(db_status)
 
     def application_data():
         return {"maintainer": "Wayde Sun",

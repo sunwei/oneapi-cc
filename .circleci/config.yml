@@ -37,20 +37,27 @@ jobs:
               name: Deploy staing
               command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME_STG.git master
           - run:
-              name: setup Heroku
-              command: |
-                bash ./heroku-setup.sh
-                heroku run upgrade --app oneapi-server-stg
+              name: Setup Heroku
+              command: bash ./heroku-setup.sh
+          - run:
+              name: Database upgrade
+                heroku run upgrade --app $HEROKU_APP_NAME_STG
           
   deploy-prod:
         working_directory: ~/repo
         docker:
-            - image: docker:stable-git
+            - image: circleci/python:3.6.2-stretch-browsers
         steps:
             - checkout
             - run:
                 name: Deploy to Heroku
                 command: git push --force https://heroku:$HEROKU_API_KEY@git.heroku.com/$HEROKU_APP_NAME.git master
+            - run:
+                name: Setup Heroku
+                command: bash ./heroku-setup.sh
+            - run:
+                name: Database upgrade
+                  heroku run upgrade --app $HEROKU_APP_NAME
 
 
 workflows:
