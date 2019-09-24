@@ -14,7 +14,7 @@ marshmallow==2.19.5
 Flask-JWT-Extended
 simplejson
 ddd-base
-ddd-api-gateway>=0.0.6
+ddd-api-gateway>=0.0.7
 ddd-nginx>=0.1.6
 pyyaml
 apispec

@@ -83,25 +83,10 @@ def generate_nginx_conf(api_gw):
     nginx = Nginx(host="oneapi.cc")
     nginx.namespace = api_gw.namespace
 
-    up_host = None
-    for upstream in api_gw.upstreams:
-        up_host = upstream.host
-        up_str = Upstream(name=upstream.name)
-        for endpoint in upstream.endpoints:
-            up_str.append(endpoint)
-        nginx.append(up_str)
-
     a_server = Server(name=nginx.namespace)
     a_server.set_var("$api_name", "-")
     a_server.disable_tls()
     nginx.append(a_server)
-
-    internal_location = Location(
-        name="/_{}".format(api_gw.namespace),
-        internal=True,
-    )
-    internal_location.set_var("$api_name", "Warehouse")
-    internal_location.append(LocationProxy(up_host))
 
     def get_api(api_ref):
         the_api = None
@@ -124,15 +109,27 @@ def generate_nginx_conf(api_gw):
     for route_spec in api_gw.route_specifications:
         api = get_api(route_spec.api_ref)
         upstream = get_upstream(route_spec.upstream_ref)
+
+        internal_location = Location(
+            name="/_{}".format(upstream.name),
+            internal=True,
+        )
+        internal_location.set_var("$api_name", "Warehouse")
+        internal_location.append(LocationProxy(upstream.host))
+
         a_location = Location(
             name=api.path,
             internal=False
         )
         a_location.set_var("$upstream", upstream.name)
         a_location.append(LocationRewrite(internal_location))
-        nginx.append(a_location)
 
-    nginx.append(internal_location)
+        up_str = Upstream(name=upstream.name)
+        for endpoint in upstream.endpoints:
+            up_str.append(endpoint)
+        nginx.append(up_str)
+        nginx.append(a_location)
+        nginx.append(internal_location)
 
     root_dir = "./dumps_dir"
     nginx.dumps(root_dir)
