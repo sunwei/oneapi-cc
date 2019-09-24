@@ -9,7 +9,7 @@ from oneapi.user.models import User  # noqa
 
 from ddd_nginx.nginx import Nginx
 from ddd_nginx.server import Server
-from ddd_nginx.location import Location, ReverseProxyStrategy
+from ddd_nginx.location import Location, LocationRewrite, LocationProxy
 from ddd_nginx.upstream import Upstream
 
 
@@ -83,7 +83,9 @@ def generate_nginx_conf(api_gw):
     nginx = Nginx(host="oneapi.cc")
     nginx.namespace = api_gw.namespace
 
+    up_host = None
     for upstream in api_gw.upstreams:
+        up_host = upstream.host
         up_str = Upstream(name=upstream.name)
         for endpoint in upstream.endpoints:
             up_str.append(endpoint)
@@ -91,14 +93,15 @@ def generate_nginx_conf(api_gw):
 
     a_server = Server(name=nginx.namespace)
     a_server.set_var("$api_name", "-")
+    a_server.disable_tls()
     nginx.append(a_server)
 
     internal_location = Location(
-        name="= /_{}".format(api_gw.namespace),
-        proxy=ReverseProxyStrategy('proxy_pass', 'http://$upstream$request_uri'),
-        scope="internal"
+        name="/_{}".format(api_gw.namespace),
+        internal=True,
     )
     internal_location.set_var("$api_name", "Warehouse")
+    internal_location.append(LocationProxy(up_host))
 
     def get_api(api_ref):
         the_api = None
@@ -123,10 +126,12 @@ def generate_nginx_conf(api_gw):
         upstream = get_upstream(route_spec.upstream_ref)
         a_location = Location(
             name=api.path,
-            proxy=ReverseProxyStrategy('rewrite', '^ /_{} last'.format(api_gw.namespace))
+            internal=False
         )
         a_location.set_var("$upstream", upstream.name)
+        a_location.append(LocationRewrite(internal_location))
         nginx.append(a_location)
+
     nginx.append(internal_location)
 
     root_dir = "./dumps_dir"
