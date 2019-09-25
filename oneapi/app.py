@@ -118,8 +118,8 @@ def health_check(app):
 
     health.add_check(db_status)
 
-    def application_data():
-        return {"maintainer": "Wayde Sun",
-                "git_repo": "https://github.com/sunwei/oneapi-cc"}
+    # def application_data():
+    #     return {"maintainer": "Wayde Sun",
+    #             "git_repo": "https://github.com/sunwei/oneapi-cc"}
 
-    env_dump.add_section("application", application_data)
+    # env_dump.add_section("application", application_data)
