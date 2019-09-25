@@ -68,7 +68,10 @@ workflows:
       - deploy-stg:
           requires:
             - unit-test
-      - deploy-prod:
+      - hold:
           type: approval
+          requires:
+            - deploy-stg
+      - deploy-prod:
           requires:
             - deploy-stg

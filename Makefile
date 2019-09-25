@@ -1,7 +1,8 @@
 CUR_TOKEN = eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpYXQiOjE1NjkzMDI1NDEsIm5iZiI6MTU2OTMwMjU0MSwianRpIjoiYzYyMTQ0OGQtZWZkNy00ZmQwLTliZDUtMjQ5MTY5ZTY0NGQ1IiwiZXhwIjoxNTY5MzAzNDQxLCJpZGVudGl0eSI6MSwiZnJlc2giOnRydWUsInR5cGUiOiJhY2Nlc3MifQ.OoijMCfwyC70D_Ym0MwI68NPmNYZz2G8uuvmMhKNBaw
 APP_LOCAL_URL = http://localhost:5000
 APP_STG_URL = https://oneapi-server-stg.herokuapp.com
-APP_URL = $(APP_STG_URL)
+APP_PROD_URL = https://oneapi-server.herokuapp.com
+APP_URL = $(APP_PROD_URL)
 
 mac-install:
 	brew install postgresql
