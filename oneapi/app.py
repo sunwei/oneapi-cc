@@ -105,7 +105,7 @@ def register_commands(app):
 
 def health_check(app):
     health = HealthCheck(app, "/healthcheck")
-    env_dump = EnvironmentDump(app, "/environment")
+    # env_dump = EnvironmentDump(app, "/environment")
 
     def db_status():
         try:
