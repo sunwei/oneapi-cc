@@ -40,7 +40,7 @@ class ProdConfig(Config):
     SQLALCHEMY_DATABASE_URI = os.environ.get('DATABASE_URL',
                                              'postgresql://localhost/example')
     GITHUB_TOKEN = os.environ.get('GITHUB_TOKEN', 'fake-one')
-    GITHUB_REPO = os.environ.get('GITHUB_REPO', 'sunwei/nginx-apigw')
+    GITHUB_REPO = os.environ.get('GITHUB_REPO', 'sunwei/oneapi-nginx-gateway')
     GITHUB_REPO_BRANCH = os.environ.get('GITHUB_REPO_BRANCH', 'master')
 
 
